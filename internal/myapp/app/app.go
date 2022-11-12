@@ -2,6 +2,9 @@ package app
 
 import (
 	"avito-internship/configs"
+	balanceHttp "avito-internship/internal/myapp/balance/delivery/http/v1"
+	balanceRepository "avito-internship/internal/myapp/balance/repository"
+	balanceUseCase "avito-internship/internal/myapp/balance/usecase"
 	"avito-internship/internal/pkg/httpserver"
 	"avito-internship/internal/pkg/postgres"
 	"github.com/gin-contrib/cors"
@@ -14,7 +17,7 @@ import (
 )
 
 func Run(cfg *configs.Config) {
-	_, err := postgres.New(cfg)
+	pg, err := postgres.New(cfg)
 
 	if err != nil {
 		log.Fatal("Error in creating postgres instance")
@@ -31,6 +34,19 @@ func Run(cfg *configs.Config) {
 		AllowCredentials: true,
 		MaxAge:           12 * time.Hour,
 	}))
+
+	// Init repositories
+	balanceRepo := balanceRepository.NewBalanceRepo(pg)
+	// Init useCases
+	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo)
+	// Init handlers
+	balanceHandlers := balanceHttp.NewBalanceHandlers(balanceUC)
+
+	v1 := handler.Group("/api/v1")
+
+	balanceGroup := v1.Group("balance")
+
+	balanceHttp.MapBalanceRoutes(balanceGroup, balanceHandlers)
 
 	serv := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 	interruption := make(chan os.Signal, 1)
