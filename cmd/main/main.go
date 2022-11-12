@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"avito-internship/configs"
+	"log"
+)
 
 func main() {
-	fmt.Println("sss")
+	_, err := configs.NewConfig()
+	if err != nil {
+		log.Fatalf("Error in parse config: %s\n", err)
+	}
 }
