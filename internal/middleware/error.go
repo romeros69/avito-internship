@@ -1,4 +1,4 @@
-package v1
+package middleware
 
 import "github.com/gin-gonic/gin"
 
@@ -6,6 +6,6 @@ type errResponse struct {
 	Error string `json:"error"`
 }
 
-func errorResponse(c *gin.Context, code int, msg string) {
+func ErrorResponse(c *gin.Context, code int, msg string) {
 	c.AbortWithStatusJSON(code, errResponse{msg})
 }
