@@ -1,0 +1,5 @@
+postgres:
+  url: postgresql://postgres:postgres@psql:5432/books
+
+http:
+  port: 9000
