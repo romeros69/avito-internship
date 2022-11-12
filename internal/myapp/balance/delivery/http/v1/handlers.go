@@ -1,8 +1,8 @@
 package v1
 
 import (
-	"avito-internship/internal/middleware"
 	"avito-internship/internal/myapp/balance"
+	"avito-internship/internal/myapp/middleware"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"net/http"
