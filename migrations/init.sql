@@ -14,10 +14,17 @@ create table service (
     tittle varchar(255) not null
 );
 
-create table type_history (
-    id uuid primary key,
-    description varchar(255) not null
-);
+create type history_type as enum (
+    'replenishment',
+    'reserve',
+    'confirmation',
+    'cancellation of a reservation'
+    );
+
+-- create table type_history (
+--     id uuid primary key,
+--     description varchar(255) not null
+-- );
 
 create table report (
     id uuid primary key,
@@ -38,14 +45,17 @@ create table reserve (
         not null
 );
 
-create table history_balance (
+create table history (
     id uuid primary key,
     balance_id uuid references balance not null,
-    type_history_id uuid references type_history not null,
+    type_history history_type not null,
     reserve_id uuid references reserve,
     report_id uuid references report,
-    source_replenishment varchar(16)
+    source_replenishment varchar(16),
+    Date timestamp not null
 );
+
+
 
 -- функция проверки номера карты
 -- CREATE OR REPLACE FUNCTION isnumeric(varchar(16))
