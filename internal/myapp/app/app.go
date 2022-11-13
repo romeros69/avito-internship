@@ -7,6 +7,13 @@ import (
 	balanceUseCase "avito-internship/internal/myapp/balance/usecase"
 	historyRepository "avito-internship/internal/myapp/history/repository"
 	historyUseCase "avito-internship/internal/myapp/history/usecase"
+	reportRepository "avito-internship/internal/myapp/report/repository"
+	reportUseCase "avito-internship/internal/myapp/report/usecase"
+	reserveHttp "avito-internship/internal/myapp/reserve/delivery/http/v1"
+	reserveRepository "avito-internship/internal/myapp/reserve/repository"
+	reserveUseCase "avito-internship/internal/myapp/reserve/usecase"
+	serviceRepository "avito-internship/internal/myapp/service/repository"
+	serviceUseCase "avito-internship/internal/myapp/service/usecase"
 	"avito-internship/internal/pkg/httpserver"
 	"avito-internship/internal/pkg/postgres"
 	"github.com/gin-contrib/cors"
@@ -40,17 +47,26 @@ func Run(cfg *configs.Config) {
 	// Init repositories
 	balanceRepo := balanceRepository.NewBalanceRepo(pg)
 	historyRepo := historyRepository.NewHistoryRepo(pg)
+	reserveRepo := reserveRepository.NewReserveRepo(pg)
+	reportRepo := reportRepository.NewReportRepo(pg)
+	serviceRepo := serviceRepository.NewServiceRepo(pg)
 	// Init useCases
 	historyUC := historyUseCase.NewHistoryUseCase(historyRepo)
+	reportUC := reportUseCase.NewReportUseCase(reportRepo)
+	serviceUC := serviceUseCase.NewServiceUseCase(serviceRepo)
 	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo, historyUC)
+	reserveUC := reserveUseCase.NewReserveUseCase(reserveRepo, balanceUC, historyUC, reportUC, serviceUC)
 
 	// Init handlers
 	balanceHandlers := balanceHttp.NewBalanceHandlers(balanceUC)
+	reserveHandlers := reserveHttp.NewReserveHandlers(reserveUC)
 
 	v1 := handler.Group("/api/v1")
 
 	balanceGroup := v1.Group("balance")
+	reserveGroup := v1.Group("reserve")
 
+	reserveHttp.MapReserveRoutes(reserveGroup, reserveHandlers)
 	balanceHttp.MapBalanceRoutes(balanceGroup, balanceHandlers)
 
 	serv := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
