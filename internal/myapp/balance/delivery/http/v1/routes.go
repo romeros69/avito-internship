@@ -7,4 +7,5 @@ import (
 
 func MapBalanceRoutes(handler *gin.RouterGroup, h balance.Handlers) {
 	handler.GET("/:id", h.GetBalanceByUserID)
+	handler.POST("", h.ReplenishmentBalance)
 }

@@ -5,6 +5,8 @@ import (
 	balanceHttp "avito-internship/internal/myapp/balance/delivery/http/v1"
 	balanceRepository "avito-internship/internal/myapp/balance/repository"
 	balanceUseCase "avito-internship/internal/myapp/balance/usecase"
+	historyRepository "avito-internship/internal/myapp/history/repository"
+	historyUseCase "avito-internship/internal/myapp/history/usecase"
 	"avito-internship/internal/pkg/httpserver"
 	"avito-internship/internal/pkg/postgres"
 	"github.com/gin-contrib/cors"
@@ -37,8 +39,11 @@ func Run(cfg *configs.Config) {
 
 	// Init repositories
 	balanceRepo := balanceRepository.NewBalanceRepo(pg)
+	historyRepo := historyRepository.NewHistoryRepo(pg)
 	// Init useCases
-	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo)
+	historyUC := historyUseCase.NewHistoryUseCase(historyRepo)
+	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo, historyUC)
+
 	// Init handlers
 	balanceHandlers := balanceHttp.NewBalanceHandlers(balanceUC)
 
