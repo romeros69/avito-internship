@@ -36,6 +36,10 @@ func (b *BalanceUseCase) GetBalanceIDByUserID(ctx context.Context, userID uuid.U
 	return b.repo.GetBalanceIDByUserID(ctx, userID)
 }
 
+func (b *BalanceUseCase) TransferBalance(ctx context.Context, balanceID uuid.UUID, value int64) error {
+	return b.repo.TransferBalance(ctx, balanceID, value)
+}
+
 func (b *BalanceUseCase) ReplenishmentBalance(ctx context.Context, replenishment models.Replenishment) error {
 	isExists, err := b.BalanceExistsByUserID(ctx, replenishment.UserID)
 	if err != nil {

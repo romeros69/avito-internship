@@ -13,4 +13,5 @@ type UseCase interface {
 	ReplenishmentBalance(context.Context, models.Replenishment) error
 	BalanceExistsByUserID(context.Context, uuid.UUID) (bool, error)
 	CreateEmptyBalance(context.Context, models.Balance) error
+	TransferBalance(context.Context, uuid.UUID, int64) error
 }
