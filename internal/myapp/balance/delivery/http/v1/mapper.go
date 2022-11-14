@@ -9,7 +9,7 @@ import (
 
 func balanceToDTO(value int64) balanceResponseDTO {
 	return balanceResponseDTO{
-		Balance: strconv.FormatInt(value, 64),
+		Balance: strconv.FormatInt(value, 10),
 	}
 }
 
