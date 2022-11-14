@@ -13,7 +13,9 @@ type ServiceRepo struct {
 }
 
 func NewServiceRepo(pg *postgres.Postgres) *ServiceRepo {
-	return &ServiceRepo{pg: pg}
+	return &ServiceRepo{
+		pg: pg,
+	}
 }
 
 var _ service.Repository = (*ServiceRepo)(nil)

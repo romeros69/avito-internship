@@ -6,7 +6,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// Balance use case
 type UseCase interface {
 	GetBalanceByUserID(context.Context, uuid.UUID) (int64, error)
 	GetBalanceIDByUserID(context.Context, uuid.UUID) (uuid.UUID, error)

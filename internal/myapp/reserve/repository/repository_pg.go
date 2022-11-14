@@ -14,7 +14,9 @@ type ReserveRepo struct {
 }
 
 func NewReserveRepo(pg *postgres.Postgres) *ReserveRepo {
-	return &ReserveRepo{pg: pg}
+	return &ReserveRepo{
+		pg: pg,
+	}
 }
 
 var _ reserve.Repository = (*ReserveRepo)(nil)

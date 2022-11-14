@@ -19,6 +19,8 @@ func NewHistoryRepo(pg *postgres.Postgres) *HistoryRepo {
 	}
 }
 
+var _ history.Repository = (*HistoryRepo)(nil)
+
 func checkID(id uuid.UUID) any {
 	if id == uuid.Nil {
 		return nil
@@ -73,5 +75,3 @@ func (h *HistoryRepo) CreateHistory(ctx context.Context, history models.History)
 	}
 	return nil
 }
-
-var _ history.Repository = (*HistoryRepo)(nil)

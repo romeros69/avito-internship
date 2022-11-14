@@ -12,7 +12,9 @@ type reserveHandlers struct {
 }
 
 func NewReserveHandlers(reserveUC reserve.UseCase) reserve.Handlers {
-	return &reserveHandlers{reserveUC: reserveUC}
+	return &reserveHandlers{
+		reserveUC: reserveUC,
+	}
 }
 
 var _ reserve.Handlers = (*reserveHandlers)(nil)

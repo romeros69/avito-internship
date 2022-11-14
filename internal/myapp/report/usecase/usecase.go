@@ -12,7 +12,9 @@ type ReportUseCase struct {
 }
 
 func NewReportUseCase(repo report.Repository) *ReportUseCase {
-	return &ReportUseCase{repo: repo}
+	return &ReportUseCase{
+		repo: repo,
+	}
 }
 
 var _ report.UseCase = (*ReportUseCase)(nil)

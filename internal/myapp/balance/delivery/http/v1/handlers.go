@@ -13,7 +13,9 @@ type balanceHandlers struct {
 }
 
 func NewBalanceHandlers(balanceUC balance.UseCase) balance.Handlers {
-	return &balanceHandlers{balanceUC: balanceUC}
+	return &balanceHandlers{
+		balanceUC: balanceUC,
+	}
 }
 
 var _ balance.Handlers = (*balanceHandlers)(nil)

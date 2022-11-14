@@ -17,6 +17,8 @@ func NewHistoryUseCase(repo history.Repository) *HistoryUseCase {
 	}
 }
 
+var _ history.UseCase = (*HistoryUseCase)(nil)
+
 func (h *HistoryUseCase) CreateHistory(ctx context.Context, history models.History) error {
 	return h.repo.CreateHistory(ctx, history)
 }
@@ -45,5 +47,3 @@ func (h *HistoryUseCase) CheckHistoryForReserve(ctx context.Context, reserveInfo
 	}
 	return false, nil
 }
-
-var _ history.UseCase = (*HistoryUseCase)(nil)

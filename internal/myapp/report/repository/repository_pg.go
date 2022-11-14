@@ -14,7 +14,9 @@ type ReportRepo struct {
 }
 
 func NewReportRepo(pg *postgres.Postgres) *ReportRepo {
-	return &ReportRepo{pg: pg}
+	return &ReportRepo{
+		pg: pg,
+	}
 }
 
 var _ report.Repository = (*ReportRepo)(nil)

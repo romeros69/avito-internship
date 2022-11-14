@@ -9,9 +9,6 @@ import (
 	"github.com/google/uuid"
 )
 
-// add check is ecists by id
-// add create new balance when replenship
-
 type BalanceRepo struct {
 	pg *postgres.Postgres
 }
