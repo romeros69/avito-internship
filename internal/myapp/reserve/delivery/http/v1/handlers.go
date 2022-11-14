@@ -19,6 +19,17 @@ func NewReserveHandlers(reserveUC reserve.UseCase) reserve.Handlers {
 
 var _ reserve.Handlers = (*reserveHandlers)(nil)
 
+// @Summary ReserveBalance
+// @Tags reserve
+// @Description The method of reserving funds from the main balance in a separate account
+// @ID reserve-balance
+// @Accept json
+// @Produce json
+// @Param input body reserveBalanceDTO true "Enter user id, value, service id, order id"
+// @Success 200 {object} nil
+// @Failure 400 {object} middleware.errResponse
+// @Failure 500 {object} middleware.errResponse
+// @Router /api/v1/reserve [post]
 func (r *reserveHandlers) ReserveBalance(c *gin.Context) {
 	req := new(reserveBalanceDTO)
 	if err := c.ShouldBindJSON(req); err != nil {
@@ -43,6 +54,17 @@ func (r *reserveHandlers) ReserveBalance(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
+// @Summary AcceptReserve
+// @Tags reserve
+// @Description Revenue recognition method - writes off money from the reserve, adds data to the report for accounting
+// @ID accept-reverse
+// @Accept json
+// @Produce json
+// @Param input body reserveBalanceDTO true "Enter user id, value, service id, order id"
+// @Success 200 {object} nil
+// @Failure 400 {object} middleware.errResponse
+// @Failure 500 {object} middleware.errResponse
+// @Router /api/v1/reserve/accept [post]
 func (r *reserveHandlers) AcceptReserve(c *gin.Context) {
 	req := new(reserveBalanceDTO)
 	if err := c.ShouldBindJSON(req); err != nil {

@@ -1,0 +1,158 @@
+basePath: /
+definitions:
+  middleware.errResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  v1.balanceResponseDTO:
+    properties:
+      balance:
+        type: string
+    type: object
+  v1.replenishmentRequestDTO:
+    properties:
+      source:
+        type: string
+      userID:
+        type: string
+      value:
+        type: string
+    type: object
+  v1.reserveBalanceDTO:
+    properties:
+      orderID:
+        type: string
+      serviceID:
+        type: string
+      userID:
+        type: string
+      value:
+        type: string
+    type: object
+host: localhost:9000
+info:
+  contact: {}
+  description: API Server for Book Application
+  version: "1.0"
+paths:
+  /api/v1/balance:
+    post:
+      consumes:
+      - application/json
+      description: The method of accruing funds to the balance
+      operationId: replenishment balanse
+      parameters:
+      - description: Enter user id, value, source (numbers of card)
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/v1.replenishmentRequestDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+      summary: ReplenishmentBalance
+      tags:
+      - balance
+  /api/v1/balance/{id}:
+    get:
+      consumes:
+      - application/json
+      description: User balance receipt method
+      operationId: get-balance
+      parameters:
+      - description: Enter user id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.balanceResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+      summary: GetBalanceByUserID
+      tags:
+      - balance
+  /api/v1/reserve:
+    post:
+      consumes:
+      - application/json
+      description: The method of reserving funds from the main balance in a separate
+        account
+      operationId: reserve-balance
+      parameters:
+      - description: Enter user id, value, service id, order id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/v1.reserveBalanceDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+      summary: ReserveBalance
+      tags:
+      - reserve
+  /api/v1/reserve/accept:
+    post:
+      consumes:
+      - application/json
+      description: Revenue recognition method - writes off money from the reserve,
+        adds data to the report for accounting
+      operationId: accept-reverse
+      parameters:
+      - description: Enter user id, value, service id, order id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/v1.reserveBalanceDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+      summary: AcceptReserve
+      tags:
+      - reserve
+swagger: "2.0"

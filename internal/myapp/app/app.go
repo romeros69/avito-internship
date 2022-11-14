@@ -2,6 +2,7 @@ package app
 
 import (
 	"avito-internship/configs"
+	_ "avito-internship/docs"
 	balanceHttp "avito-internship/internal/myapp/balance/delivery/http/v1"
 	balanceRepository "avito-internship/internal/myapp/balance/repository"
 	balanceUseCase "avito-internship/internal/myapp/balance/usecase"
@@ -18,6 +19,8 @@ import (
 	"avito-internship/internal/pkg/postgres"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"log"
 	"os"
 	"os/signal"
@@ -62,6 +65,7 @@ func Run(cfg *configs.Config) {
 	balanceHandlers := balanceHttp.NewBalanceHandlers(balanceUC)
 	reserveHandlers := reserveHttp.NewReserveHandlers(reserveUC)
 
+	handler.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	v1 := handler.Group("/api/v1")
 
 	balanceGroup := v1.Group("balance")

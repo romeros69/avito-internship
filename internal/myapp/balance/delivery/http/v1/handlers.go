@@ -20,6 +20,17 @@ func NewBalanceHandlers(balanceUC balance.UseCase) balance.Handlers {
 
 var _ balance.Handlers = (*balanceHandlers)(nil)
 
+// @Summary GetBalanceByUserID
+// @Tags balance
+// @Description User balance receipt method
+// @ID get-balance
+// @Accept json
+// @Produce json
+// @Param id path string true "Enter user id"
+// @Success 200 {object} balanceResponseDTO
+// @Failure 400 {object} middleware.errResponse
+// @Failure 500 {object} middleware.errResponse
+// @Router /api/v1/balance/{id} [get]
 func (b *balanceHandlers) GetBalanceByUserID(c *gin.Context) {
 	stringID := c.Param("id")
 	userID, err := uuid.Parse(stringID)
@@ -35,6 +46,17 @@ func (b *balanceHandlers) GetBalanceByUserID(c *gin.Context) {
 	c.JSON(http.StatusOK, balanceToDTO(value))
 }
 
+// @Summary ReplenishmentBalance
+// @Tags balance
+// @Description The method of accruing funds to the balance
+// @ID replenishment balanse
+// @Accept json
+// @Produce json
+// @Param input body replenishmentRequestDTO true "Enter user id, value, source (numbers of card)"
+// @Success 200 {object} nil
+// @Failure 400 {object} middleware.errResponse
+// @Failure 500 {object} middleware.errResponse
+// @Router /api/v1/balance [post]
 func (b *balanceHandlers) ReplenishmentBalance(c *gin.Context) {
 	req := new(replenishmentRequestDTO)
 	if err := c.ShouldBindJSON(req); err != nil {

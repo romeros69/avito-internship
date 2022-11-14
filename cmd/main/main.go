@@ -6,6 +6,12 @@ import (
 	"log"
 )
 
+// @tittle Avito test task by Roman Loginov
+// @version 1.0
+// @description API Server for Book Application
+
+// @host localhost:9000
+// @BasePath /
 func main() {
 	cfg, err := configs.NewConfig()
 	if err != nil {
