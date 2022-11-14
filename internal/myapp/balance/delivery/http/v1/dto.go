@@ -1,8 +1,7 @@
 package v1
 
 type balanceResponseDTO struct {
-	Rubles  string `json:"rubles"`
-	Pennies string `json:"pennies"`
+	Balance string `json:"balance"`
 }
 
 type replenishmentRequestDTO struct {

@@ -9,8 +9,7 @@ import (
 
 func balanceToDTO(value int64) balanceResponseDTO {
 	return balanceResponseDTO{
-		Rubles:  strconv.FormatInt(value/100, 10),
-		Pennies: strconv.FormatInt(value%100, 10),
+		Balance: strconv.FormatInt(value, 64),
 	}
 }
 
