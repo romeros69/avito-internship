@@ -24,18 +24,23 @@ func NewBalanceRepo(pg *postgres.Postgres) *BalanceRepo {
 
 var _ balance.Repository = (*BalanceRepo)(nil)
 
-func (b *BalanceRepo) CreateEmptyBalance(ctx context.Context, balance models.Balance) error {
+func (b *BalanceRepo) CreateEmptyBalance(ctx context.Context, balance models.Balance) (uuid.UUID, error) {
 	query := `insert into balance (id, user_id) VALUES ($1, $2) returning id`
 
 	rows, err := b.pg.Pool.Query(ctx, query, balance.ID, balance.UserID)
 	if err != nil {
-		return fmt.Errorf("cannot execute query: %w", err)
+		return uuid.Nil, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
 	if !rows.Next() {
-		return fmt.Errorf("error in creating new empty balance")
+		return uuid.Nil, fmt.Errorf("error in creating new empty balance")
 	}
-	return nil
+	var balanceID uuid.UUID
+	err = rows.Scan(&balanceID)
+	if err != nil {
+		return uuid.Nil, fmt.Errorf("error in pasrsing balance id of creating balance")
+	}
+	return balanceID, nil
 }
 
 func (b *BalanceRepo) BalanceExistsByUserID(ctx context.Context, userID uuid.UUID) (bool, error) {

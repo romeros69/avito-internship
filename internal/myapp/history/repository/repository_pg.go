@@ -34,15 +34,15 @@ func checkSourceReplenishment(source string) any {
 }
 
 func (h *HistoryRepo) CreateHistory(ctx context.Context, history models.History) error {
-	query := `insert into history (id, balance_id, type_history, reserve_id, report_id, source_replenishment, date) values ($1, $2, $3, $4, $5, $6, $7) returning id`
+	query := `insert into history (id, balance_id, type_history, order_id, service_id, source_replenishment, date) values ($1, $2, $3, $4, $5, $6, $7) returning id`
 
 	rows, err := h.pg.Pool.Query(ctx,
 		query,
 		history.ID,
 		history.BalanceID,
 		history.TypeHistory,
-		checkID(history.ReserveID),
-		checkID(history.ReportID),
+		checkID(history.OrderID),
+		checkID(history.ServiceID),
 		checkSourceReplenishment(history.SourceReplenishment),
 		history.Date)
 	if err != nil {

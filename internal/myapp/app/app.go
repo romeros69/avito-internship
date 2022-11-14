@@ -54,7 +54,8 @@ func Run(cfg *configs.Config) {
 	historyUC := historyUseCase.NewHistoryUseCase(historyRepo)
 	reportUC := reportUseCase.NewReportUseCase(reportRepo)
 	serviceUC := serviceUseCase.NewServiceUseCase(serviceRepo)
-	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo, historyUC)
+	reserveSimpleUC := reserveUseCase.NewSimpleReserveUseCase(reserveRepo, historyUC, reportUC, serviceUC)
+	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo, historyUC, reserveSimpleUC)
 	reserveUC := reserveUseCase.NewReserveUseCase(reserveRepo, balanceUC, historyUC, reportUC, serviceUC)
 
 	// Init handlers

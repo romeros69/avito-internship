@@ -20,27 +20,44 @@ func NewReserveRepo(pg *postgres.Postgres) *ReserveRepo {
 var _ reserve.Repository = (*ReserveRepo)(nil)
 
 func (r *ReserveRepo) ReserveBalance(ctx context.Context, reserve models.Reserve) (uuid.UUID, error) {
-	query := `insert into reserve (id, balance_id, value, status) values ($1, $2, $3, $4) returning id`
+	query := `update reserve set value = value + $1 where balance_id = $2 returning id`
 
 	rows, err := r.pg.Pool.Query(
 		ctx,
 		query,
-		reserve.ID,
-		reserve.BalanceID,
 		reserve.Value,
-		reserve.Status,
+		reserve.BalanceID,
 	)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
 	if !rows.Next() {
-		return uuid.Nil, fmt.Errorf("error in creating reserve for balance (balance_id=%s)", reserve.BalanceID.String())
+		return uuid.Nil, fmt.Errorf("error in add money to reserve for balance (balance_id=%s)", reserve.BalanceID.String())
 	}
 	var reserveID uuid.UUID
 	err = rows.Scan(&reserveID)
 	if err != nil {
 		return uuid.Nil, fmt.Errorf("error in parsing id reserve of reserve reserve balance: %w", err)
 	}
-	return reserveID, nil
+	return uuid.Nil, nil
+}
+
+func (r *ReserveRepo) CreateEmptyReserve(ctx context.Context, reserve models.Reserve) error {
+	query := `insert into reserve (id, balance_id, value) values ($1, $2, $3) returning id`
+
+	rows, err := r.pg.Pool.Query(ctx, query, reserve.ID, reserve.BalanceID, reserve.Value)
+	if err != nil {
+		return fmt.Errorf("cannot execute query: %w", err)
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		return fmt.Errorf("error in creating empty reserve for balance (balance_id=%s)", reserve.BalanceID.String())
+	}
+	return nil
+}
+
+func (r *ReserveRepo) AcceptReserve(ctx context.Context, reserveInfo models.ReserveInfo) error {
+	// TODO impement me
+	panic("panic")
 }

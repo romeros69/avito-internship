@@ -8,4 +8,6 @@ import (
 
 type Repository interface {
 	ReserveBalance(context.Context, models.Reserve) (uuid.UUID, error)
+	AcceptReserve(context.Context, models.ReserveInfo) error
+	CreateEmptyReserve(context.Context, models.Reserve) error
 }

@@ -20,14 +20,13 @@ func NewReportRepo(pg *postgres.Postgres) *ReportRepo {
 var _ report.Repository = (*ReportRepo)(nil)
 
 func (r *ReportRepo) CreateReport(ctx context.Context, report models.Report) (uuid.UUID, error) {
-	query := `insert into report (id, service_id, order_id, value, date) values ($1, $2, $3, $4, $5) returning id`
+	query := `insert into report (id, service_id, value, date) values ($1, $2, $3, $4) returning id`
 
 	rows, err := r.pg.Pool.Query(
 		ctx,
 		query,
 		report.ID,
 		report.ServiceID,
-		report.OrderID,
 		report.Value,
 		report.Date,
 	)

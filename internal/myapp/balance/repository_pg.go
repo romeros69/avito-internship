@@ -12,6 +12,6 @@ type Repository interface {
 	ReplenishmentBalance(context.Context, models.Replenishment) (uuid.UUID, error)
 	GetBalanceIDByUserID(context.Context, uuid.UUID) (uuid.UUID, error)
 	BalanceExistsByUserID(context.Context, uuid.UUID) (bool, error)
-	CreateEmptyBalance(context.Context, models.Balance) error
+	CreateEmptyBalance(context.Context, models.Balance) (uuid.UUID, error)
 	TransferBalance(context.Context, uuid.UUID, int64) error
 }
