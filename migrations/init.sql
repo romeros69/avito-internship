@@ -29,7 +29,6 @@ create type history_type as enum (
 create table report (
     id uuid primary key,
     service_id uuid references service not null,
-    order_id uuid not null,
     value bigint
         check (value >= 0)
         not null,
@@ -39,22 +38,18 @@ create table report (
 create table reserve (
     id uuid primary key,
     balance_id uuid references balance not null,
-    value bigint check (value >= 0) not null,
-    status varchar(9)
-        check (status = 'active' or status = 'no active')
-        not null
+    value bigint check (value >= 0) not null
 );
 
 create table history (
     id uuid primary key,
     balance_id uuid references balance not null,
     type_history history_type not null,
-    reserve_id uuid references reserve,
-    report_id uuid references report,
+    order_id uuid,
+    service_id uuid references service,
     source_replenishment varchar(16),
     Date timestamp not null
 );
-
 
 
 -- функция проверки номера карты
