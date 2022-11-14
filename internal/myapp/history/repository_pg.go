@@ -7,4 +7,5 @@ import (
 
 type Repository interface {
 	CreateHistory(context.Context, models.History) error
+	GetCountHistoryForReserveByType(context.Context, models.HistoryInfo) (uint, error)
 }

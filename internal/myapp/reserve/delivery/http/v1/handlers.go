@@ -35,3 +35,22 @@ func (r *reserveHandlers) ReserveBalance(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, nil)
 }
+
+func (r *reserveHandlers) AcceptReserve(c *gin.Context) {
+	req := new(reserveBalanceDTO)
+	if err := c.ShouldBindJSON(req); err != nil {
+		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	reserveInfoEntity, err := reserveInfoToEntity(*req)
+	if err != nil {
+		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = r.reserveUC.AcceptReserve(c.Request.Context(), reserveInfoEntity)
+	if err != nil {
+		middleware.ErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
+	c.JSON(http.StatusOK, nil)
+}

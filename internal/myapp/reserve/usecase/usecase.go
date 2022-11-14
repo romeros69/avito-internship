@@ -78,18 +78,6 @@ func (r *ReserveUseCase) ReserveBalance(ctx context.Context, reserveInfo models.
 		return err
 	}
 
-	//// создание отчета
-	//_, err = r.reportUC.CreateReport(
-	//	ctx,
-	//	models.Report{
-	//		ID:        uuid.New(),
-	//		ServiceID: reserveInfo.ServiceID,
-	//		Value:     reserveInfo.Value,
-	//		Date:      time.Now(),
-	//	})
-	//if err != nil {
-	//	return err
-	//}
 	// создание истории
 	err = r.historyUC.CreateHistory(ctx, models.History{
 		ID:          uuid.New(),
@@ -107,6 +95,69 @@ func (r *ReserveUseCase) ReserveBalance(ctx context.Context, reserveInfo models.
 }
 
 func (r *ReserveUseCase) AcceptReserve(ctx context.Context, reserveInfo models.ReserveInfo) error {
-	//TODO implement me
-	panic("implement me")
+	// проверка того, что сервис с таким id есть
+	serviceExists, err := r.serviceUC.ServiceExistsByID(ctx, reserveInfo.ServiceID)
+	switch {
+	case err != nil:
+		return err
+	case !serviceExists:
+		return fmt.Errorf("service with this id (service_id = %s) does not exist", reserveInfo.ServiceID.String())
+	}
+
+	// получение id баланса по user_id
+	balanceID, err := r.balanceUC.GetBalanceIDByUserID(ctx, reserveInfo.UserID)
+	if err != nil {
+		return err
+	}
+	// проверка что на балансе достаточно средств
+	ok, err := r.balanceUC.CheckBeforeReserve(ctx, reserveInfo.UserID, reserveInfo.Value)
+	switch {
+	case err != nil:
+		return err
+	case !ok:
+		return fmt.Errorf("not enough money on balance")
+	}
+
+	// проверка на то, что за этот заказ еще не снимались деньги
+	canConfirm, err := r.historyUC.CheckHistoryForReserve(ctx, reserveInfo, balanceID)
+	switch {
+	case err != nil:
+		return err
+	case !canConfirm:
+		return fmt.Errorf("it is impossible to confirm the service due to the lack of a reserve")
+	}
+
+	// снимаем деньги с резерва
+	err = r.repo.AcceptReserve(ctx, balanceID, reserveInfo.Value)
+	if err != nil {
+		return err
+	}
+
+	// создание истории
+	err = r.historyUC.CreateHistory(ctx, models.History{
+		ID:          uuid.New(),
+		BalanceID:   balanceID,
+		TypeHistory: "confirmation",
+		OrderID:     reserveInfo.OrderID,
+		ServiceID:   reserveInfo.ServiceID,
+		Value:       reserveInfo.Value,
+		Date:        time.Now(),
+	})
+	if err != nil {
+		return err
+	}
+
+	// создание отчета
+	_, err = r.reportUC.CreateReport(
+		ctx,
+		models.Report{
+			ID:        uuid.New(),
+			ServiceID: reserveInfo.ServiceID,
+			Value:     reserveInfo.Value,
+			Date:      time.Now(),
+		})
+	if err != nil {
+		return err
+	}
+	return nil
 }

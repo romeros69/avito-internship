@@ -57,7 +57,16 @@ func (r *ReserveRepo) CreateEmptyReserve(ctx context.Context, reserve models.Res
 	return nil
 }
 
-func (r *ReserveRepo) AcceptReserve(ctx context.Context, reserveInfo models.ReserveInfo) error {
-	// TODO impement me
-	panic("panic")
+func (r *ReserveRepo) AcceptReserve(ctx context.Context, balanceID uuid.UUID, value int64) error {
+	query := `update reserve set value = value - $1 where balance_id = $2 returning id`
+
+	rows, err := r.pg.Pool.Query(ctx, query, value, balanceID)
+	if err != nil {
+		return fmt.Errorf("cannot execute query: %w", err)
+	}
+	defer rows.Close()
+	if !rows.Next() {
+		return fmt.Errorf("not enough money in reserve")
+	}
+	return nil
 }
