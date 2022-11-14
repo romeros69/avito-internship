@@ -46,6 +46,11 @@ func (b *balanceHandlers) ReplenishmentBalance(c *gin.Context) {
 		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+	err = replenishmentEntity.Validate()
+	if err != nil {
+		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
 	err = b.balanceUC.ReplenishmentBalance(c.Request.Context(), replenishmentEntity)
 	if err != nil {
 		middleware.ErrorResponse(c, http.StatusInternalServerError, err.Error())

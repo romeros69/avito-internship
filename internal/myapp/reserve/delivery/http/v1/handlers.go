@@ -30,6 +30,11 @@ func (r *reserveHandlers) ReserveBalance(c *gin.Context) {
 		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
+	err = reserveInfoEntity.Validate()
+	if err != nil {
+		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
 	err = r.reserveUC.ReserveBalance(c.Request.Context(), reserveInfoEntity)
 	if err != nil {
 		middleware.ErrorResponse(c, http.StatusInternalServerError, err.Error())
@@ -45,6 +50,11 @@ func (r *reserveHandlers) AcceptReserve(c *gin.Context) {
 		return
 	}
 	reserveInfoEntity, err := reserveInfoToEntity(*req)
+	if err != nil {
+		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = reserveInfoEntity.Validate()
 	if err != nil {
 		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
