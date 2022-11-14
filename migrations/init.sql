@@ -17,8 +17,7 @@ create table service (
 create type history_type as enum (
     'replenishment',
     'reserve',
-    'confirmation',
-    'cancellation of a reservation'
+    'confirmation'
     );
 
 -- create table type_history (
@@ -51,16 +50,6 @@ create table history (
     Date timestamp not null
 );
 
-
--- функция проверки номера карты
--- CREATE OR REPLACE FUNCTION isnumeric(varchar(16))
--- RETURNS BOOLEAN AS $$
--- DECLARE
---     x NUMERIC;
--- BEGIN
---     x = $1::NUMERIC;
---     RETURN TRUE;
--- EXCEPTION WHEN others THEN
---     RETURN FALSE;
--- END;
--- $$ LANGUAGE 'plpgsql';
+insert into service (id, tittle) VALUES ('0ba5b953-9df7-4170-80bf-50d3d8e1111d', 'cleaning');
+insert into service (id, tittle) VALUES ('0ba5b953-9df7-4170-80bf-50d3d8e2222d', 'repair');
+insert into service (id, tittle) VALUES ('0ba5b953-9df7-4170-80bf-50d3d8e3333d', 'massage');
