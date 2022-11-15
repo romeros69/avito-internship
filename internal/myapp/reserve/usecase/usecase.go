@@ -113,14 +113,6 @@ func (r *ReserveUseCase) AcceptReserve(ctx context.Context, reserveInfo models.R
 		return err
 	}
 
-	ok, err := r.balanceUC.CheckBeforeReserve(ctx, reserveInfo.UserID, reserveInfo.Value)
-	switch {
-	case err != nil:
-		return err
-	case !ok:
-		return fmt.Errorf("not enough money on balance")
-	}
-
 	canConfirm, err := r.historyUC.CheckHistoryForReserve(ctx, reserveInfo, balanceID)
 	switch {
 	case err != nil:
@@ -129,7 +121,7 @@ func (r *ReserveUseCase) AcceptReserve(ctx context.Context, reserveInfo models.R
 		return fmt.Errorf("it is impossible to confirm the service due to the lack of a reserve")
 	}
 
-	err = r.repo.AcceptReserve(ctx, balanceID, reserveInfo.Value)
+	err = r.repo.SubtractionReserve(ctx, balanceID, reserveInfo.Value)
 	if err != nil {
 		return err
 	}
