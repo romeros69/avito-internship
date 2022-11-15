@@ -16,6 +16,10 @@ func NewServiceUseCase(repo service.Repository) *ServiceUseCase {
 
 var _ service.UseCase = (*ServiceUseCase)(nil)
 
+func (s *ServiceUseCase) GetServiceNameByID(ctx context.Context, serviceID uuid.UUID) (string, error) {
+	return s.repo.GetServiceNameByID(ctx, serviceID)
+}
+
 func (s *ServiceUseCase) ServiceExistsByID(ctx context.Context, serviceID uuid.UUID) (bool, error) {
 	return s.repo.ServiceExistsByID(ctx, serviceID)
 }
