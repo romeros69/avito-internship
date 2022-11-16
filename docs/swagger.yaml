@@ -59,7 +59,7 @@ definitions:
 host: localhost:9000
 info:
   contact: {}
-  description: API Server for Book Application
+  description: Avito test task by Roman Loginov
   version: "1.0"
 paths:
   /api/v1/balance:

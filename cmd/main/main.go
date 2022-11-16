@@ -8,7 +8,7 @@ import (
 
 // @tittle Avito test task by Roman Loginov
 // @version 1.0
-// @description API Server for Book Application
+// @description Avito test task by Roman Loginov
 
 // @host localhost:9000
 // @BasePath /
