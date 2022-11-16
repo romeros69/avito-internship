@@ -29,6 +29,7 @@ func (s *ServiceRepo) GetServiceNameByID(ctx context.Context, serviceID uuid.UUI
 	}
 	defer rows.Close()
 	var nameService string
+	rows.Next()
 	err = rows.Scan(&nameService)
 	if err != nil {
 		return "", fmt.Errorf("error parsing tittle of service: %w", err)

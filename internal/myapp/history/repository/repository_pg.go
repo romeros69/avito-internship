@@ -35,6 +35,45 @@ func checkSourceReplenishment(source string) any {
 	return source
 }
 
+func (h *HistoryRepo) GetHistoryByBalanceID(ctx context.Context, pagination models.Pagination, balanceID uuid.UUID) ([]models.History, error) {
+	query := `select * from history where balance_id = $1 order by $2 limit $3 offset $4`
+
+	offset := pagination.GetOffset()
+	rows, err := h.pg.Pool.Query(ctx, query, balanceID, pagination.OrderBy, pagination.Size, offset)
+	if err != nil {
+		return nil, fmt.Errorf("cannot execute query: %w", err)
+	}
+	defer rows.Close()
+	var historyList []models.History
+
+	var test interface{}
+	for rows.Next() {
+		var historyEntity models.History
+
+		err = rows.Scan(
+			&historyEntity.ID,
+			&historyEntity.BalanceID,
+			&historyEntity.TypeHistory,
+			&historyEntity.OrderID,
+			&historyEntity.ServiceID,
+			&historyEntity.Value,
+			&test, // вот тут
+			&historyEntity.Date,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("error in parsing history: %w", err)
+		}
+		if test != nil {
+			historyEntity.SourceReplenishment = test.(string)
+		} else {
+			historyEntity.SourceReplenishment = ""
+		}
+		historyList = append(historyList, historyEntity)
+	}
+
+	return historyList, nil
+}
+
 func (h *HistoryRepo) GetCountHistoryForReserveByType(ctx context.Context, historyInfo models.HistoryInfo) (uint, error) {
 	query := `select count(*) from history where balance_id = $1 and order_id = $2 and service_id = $3 and type_history = $4`
 
@@ -55,7 +94,7 @@ func (h *HistoryRepo) GetCountHistoryForReserveByType(ctx context.Context, histo
 }
 
 func (h *HistoryRepo) CreateHistory(ctx context.Context, history models.History) error {
-	query := `insert into history (id, balance_id, type_history, order_id, service_id, source_replenishment, date) values ($1, $2, $3, $4, $5, $6, $7) returning id`
+	query := `insert into history (id, balance_id, type_history, order_id, service_id, value, source_replenishment, date) values ($1, $2, $3, $4, $5, $6, $7, $8) returning id`
 
 	rows, err := h.pg.Pool.Query(ctx,
 		query,
@@ -64,6 +103,7 @@ func (h *HistoryRepo) CreateHistory(ctx context.Context, history models.History)
 		history.TypeHistory,
 		checkID(history.OrderID),
 		checkID(history.ServiceID),
+		history.Value,
 		checkSourceReplenishment(history.SourceReplenishment),
 		history.Date)
 	if err != nil {

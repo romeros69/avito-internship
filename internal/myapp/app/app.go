@@ -6,6 +6,7 @@ import (
 	balanceHttp "avito-internship/internal/myapp/balance/delivery/http/v1"
 	balanceRepository "avito-internship/internal/myapp/balance/repository"
 	balanceUseCase "avito-internship/internal/myapp/balance/usecase"
+	historyHttp "avito-internship/internal/myapp/history/delivery/http/v1"
 	historyRepository "avito-internship/internal/myapp/history/repository"
 	historyUseCase "avito-internship/internal/myapp/history/usecase"
 	reportRepository "avito-internship/internal/myapp/report/repository"
@@ -54,25 +55,29 @@ func Run(cfg *configs.Config) {
 	reportRepo := reportRepository.NewReportRepo(pg)
 	serviceRepo := serviceRepository.NewServiceRepo(pg)
 	// Init useCases
-	historyUC := historyUseCase.NewHistoryUseCase(historyRepo)
+	historySimpleUC := historyUseCase.NewSimpleHistoryUseCase(historyRepo)
 	reportUC := reportUseCase.NewReportUseCase(reportRepo)
 	serviceUC := serviceUseCase.NewServiceUseCase(serviceRepo)
-	reserveSimpleUC := reserveUseCase.NewSimpleReserveUseCase(reserveRepo, historyUC, reportUC, serviceUC)
-	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo, historyUC, reserveSimpleUC)
+	reserveSimpleUC := reserveUseCase.NewSimpleReserveUseCase(reserveRepo, historySimpleUC, reportUC, serviceUC)
+	balanceUC := balanceUseCase.NewBalanceUseCase(balanceRepo, historySimpleUC, reserveSimpleUC)
+	historyUC := historyUseCase.NewHistoryUseCase(historyRepo, balanceUC, serviceUC)
 	reserveUC := reserveUseCase.NewReserveUseCase(reserveRepo, balanceUC, historyUC, reportUC, serviceUC)
 
 	// Init handlers
 	balanceHandlers := balanceHttp.NewBalanceHandlers(balanceUC)
 	reserveHandlers := reserveHttp.NewReserveHandlers(reserveUC)
+	historyHandlers := historyHttp.NewHistoryHandlers(historyUC)
 
 	handler.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	v1 := handler.Group("/api/v1")
 
 	balanceGroup := v1.Group("balance")
 	reserveGroup := v1.Group("reserve")
+	historyGroup := v1.Group("history")
 
 	reserveHttp.MapReserveRoutes(reserveGroup, reserveHandlers)
 	balanceHttp.MapBalanceRoutes(balanceGroup, balanceHandlers)
+	historyHttp.MapHistoryRoutes(historyGroup, historyHandlers)
 
 	serv := httpserver.New(handler, httpserver.Port(cfg.HTTP.Port))
 	interruption := make(chan os.Signal, 1)
