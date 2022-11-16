@@ -6,5 +6,5 @@ import (
 )
 
 func MapHistoryRoutes(handler *gin.RouterGroup, h history.Handlers) {
-	handler.GET("/:id/:limit/:page/:orderBy", h.GetTransactionInfoByUserID)
+	handler.GET("/:id", h.GetTransactionInfoByUserID)
 }

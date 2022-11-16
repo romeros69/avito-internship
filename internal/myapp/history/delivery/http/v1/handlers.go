@@ -28,17 +28,17 @@ func (h *historyHandlers) GetTransactionInfoByUserID(c *gin.Context) {
 		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	limit, err := strconv.Atoi(c.Param("limit"))
+	limit, err := strconv.Atoi(c.Query("limit"))
 	if err != nil {
 		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	page, err := strconv.Atoi(c.Param("page"))
+	page, err := strconv.Atoi(c.Query("page"))
 	if err != nil {
 		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
 		return
 	}
-	orderBy := c.Param("orderBy")
+	orderBy := c.Query("orderBy")
 	err = validate(orderBy, limit, page)
 	if err != nil {
 		middleware.ErrorResponse(c, http.StatusBadRequest, err.Error())
