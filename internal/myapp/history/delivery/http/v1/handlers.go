@@ -22,6 +22,21 @@ func NewHistoryHandlers(historyUC history.UseCase) history.Handlers {
 
 var _ history.Handlers = (*historyHandlers)(nil)
 
+// GetTransactionInfoByUserID godoc
+// @Summary GetHistoryByUserID
+// @Tags history
+// @Description Getting history transactions by user id
+// @ID get-history
+// @Accept json
+// @Produce json
+// @Param id path string true "Enter user id"
+// @Param limit query string true "Enter limit"
+// @Param page query string true "Enter number of page"
+// @Param orderBy query string true "Enter sort type (date or value)"
+// @Success 200 {object} centralHistoryResponseDTO
+// @Failure 400 {object} middleware.errResponse
+// @Failure 500 {object} middleware.errResponse
+// @Router /api/v1/history/{id} [get]
 func (h *historyHandlers) GetTransactionInfoByUserID(c *gin.Context) {
 	userID, err := uuid.Parse(c.Param("id"))
 	if err != nil {

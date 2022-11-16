@@ -97,6 +97,72 @@
                 }
             }
         },
+        "/api/v1/history/{id}": {
+            "get": {
+                "description": "Getting history transactions by user id",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "history"
+                ],
+                "summary": "GetHistoryByUserID",
+                "operationId": "get-history",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter user id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter limit",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter number of page",
+                        "name": "page",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter sort type (date or value)",
+                        "name": "orderBy",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.centralHistoryResponseDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.errResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/reserve": {
             "post": {
                 "description": "The method of reserving funds from the main balance in a separate account",
@@ -199,6 +265,46 @@
             "type": "object",
             "properties": {
                 "balance": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.centralHistoryResponseDTO": {
+            "type": "object",
+            "properties": {
+                "hasMore": {
+                    "type": "boolean"
+                },
+                "history": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/v1.historyResponseDTO"
+                    }
+                },
+                "totalPage": {
+                    "type": "integer"
+                }
+            }
+        },
+        "v1.historyResponseDTO": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "orderID": {
+                    "type": "string"
+                },
+                "serviceName": {
+                    "type": "string"
+                },
+                "sourceReplenishment": {
+                    "type": "string"
+                },
+                "typeOfTransaction": {
+                    "type": "string"
+                },
+                "value": {
                     "type": "string"
                 }
             }

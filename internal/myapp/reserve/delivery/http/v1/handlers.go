@@ -19,6 +19,7 @@ func NewReserveHandlers(reserveUC reserve.UseCase) reserve.Handlers {
 
 var _ reserve.Handlers = (*reserveHandlers)(nil)
 
+// ReserveBalance godoc
 // @Summary ReserveBalance
 // @Tags reserve
 // @Description The method of reserving funds from the main balance in a separate account
@@ -54,6 +55,7 @@ func (r *reserveHandlers) ReserveBalance(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
+// AcceptReserve godoc
 // @Summary AcceptReserve
 // @Tags reserve
 // @Description Revenue recognition method - writes off money from the reserve, adds data to the report for accounting

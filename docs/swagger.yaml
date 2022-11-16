@@ -10,6 +10,32 @@ definitions:
       balance:
         type: string
     type: object
+  v1.centralHistoryResponseDTO:
+    properties:
+      hasMore:
+        type: boolean
+      history:
+        items:
+          $ref: '#/definitions/v1.historyResponseDTO'
+        type: array
+      totalPage:
+        type: integer
+    type: object
+  v1.historyResponseDTO:
+    properties:
+      date:
+        type: string
+      orderID:
+        type: string
+      serviceName:
+        type: string
+      sourceReplenishment:
+        type: string
+      typeOfTransaction:
+        type: string
+      value:
+        type: string
+    type: object
   v1.replenishmentRequestDTO:
     properties:
       source:
@@ -95,6 +121,51 @@ paths:
       summary: GetBalanceByUserID
       tags:
       - balance
+  /api/v1/history/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Getting history transactions by user id
+      operationId: get-history
+      parameters:
+      - description: Enter user id
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Enter limit
+        in: query
+        name: limit
+        required: true
+        type: string
+      - description: Enter number of page
+        in: query
+        name: page
+        required: true
+        type: string
+      - description: Enter sort type (date or value)
+        in: query
+        name: orderBy
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.centralHistoryResponseDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+      summary: GetHistoryByUserID
+      tags:
+      - history
   /api/v1/reserve:
     post:
       consumes:

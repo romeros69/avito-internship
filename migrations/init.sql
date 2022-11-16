@@ -46,6 +46,7 @@ create table history (
     type_history history_type not null,
     order_id uuid,
     service_id uuid references service,
+    value bigint check (value >= 0) not null,
     source_replenishment varchar(16),
     Date timestamp not null
 );

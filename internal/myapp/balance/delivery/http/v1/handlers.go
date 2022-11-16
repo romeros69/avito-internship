@@ -20,6 +20,7 @@ func NewBalanceHandlers(balanceUC balance.UseCase) balance.Handlers {
 
 var _ balance.Handlers = (*balanceHandlers)(nil)
 
+// GetBalanceByUserID godoc
 // @Summary GetBalanceByUserID
 // @Tags balance
 // @Description User balance receipt method
@@ -46,6 +47,7 @@ func (b *balanceHandlers) GetBalanceByUserID(c *gin.Context) {
 	c.JSON(http.StatusOK, balanceToDTO(value))
 }
 
+// ReplenishmentBalance godoc
 // @Summary ReplenishmentBalance
 // @Tags balance
 // @Description The method of accruing funds to the balance
