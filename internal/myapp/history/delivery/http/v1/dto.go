@@ -1,5 +1,11 @@
 package v1
 
+type centralHistoryResponseDTO struct {
+	History   []historyResponseDTO `json:"history"`
+	HasMore   bool                 `json:"hasMore"`
+	TotalPage int                  `json:"totalPage"`
+}
+
 type historyResponseDTO struct {
 	Date                string `json:"date"`
 	TypeOfTransaction   string `json:"typeOfTransaction"`

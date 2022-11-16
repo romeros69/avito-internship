@@ -5,7 +5,6 @@ import (
 	"strconv"
 )
 
-// как передать слайс
 func historyToDTO(serviceName string, history models.History) historyResponseDTO {
 
 	return historyResponseDTO{

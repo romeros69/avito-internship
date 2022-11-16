@@ -35,6 +35,24 @@ func checkSourceReplenishment(source string) any {
 	return source
 }
 
+func (h *HistoryRepo) GetCountHistoryByBalanceID(ctx context.Context, balanceID uuid.UUID) (int64, error) {
+	query := `select count(*) from history where balance_id=$1`
+
+	rows, err := h.pg.Pool.Query(ctx, query, balanceID)
+	if err != nil {
+		return -1, fmt.Errorf("cannot execute query: %w", err)
+	}
+	defer rows.Close()
+	var count int64
+	if rows.Next() {
+		err = rows.Scan(&count)
+		if err != nil {
+			return -1, fmt.Errorf("error parsing count of story by user: %w", err)
+		}
+	}
+	return count, nil
+}
+
 func (h *HistoryRepo) GetHistoryByBalanceID(ctx context.Context, pagination models.Pagination, balanceID uuid.UUID) ([]models.History, error) {
 	query := ``
 	if pagination.OrderBy == "date" {

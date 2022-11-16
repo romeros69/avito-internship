@@ -56,9 +56,13 @@ func (h *historyHandlers) GetTransactionInfoByUserID(c *gin.Context) {
 		middleware.ErrorResponse(c, http.StatusInternalServerError, err.Error())
 		return
 	}
-	var response []historyResponseDTO
+	var historyList []historyResponseDTO
 	for i, v := range historyTransfer.Histories {
-		response = append(response, historyToDTO(historyTransfer.ServiceNames[i], v))
+		historyList = append(historyList, historyToDTO(historyTransfer.ServiceNames[i], v))
 	}
-	c.JSON(http.StatusOK, response)
+	c.JSON(http.StatusOK, centralHistoryResponseDTO{
+		History:   historyList,
+		HasMore:   GetHasMore(int64(page), historyTransfer.Count, int64(limit)),
+		TotalPage: GetTotalPage(historyTransfer.Count, int64(limit)),
+	})
 }

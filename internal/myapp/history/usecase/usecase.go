@@ -25,6 +25,10 @@ func NewHistoryUseCase(repo history.Repository, balanceUC balance.UseCase, servi
 
 var _ history.UseCase = (*HistoryUseCase)(nil)
 
+func (h *HistoryUseCase) GetCountHistoryByBalanceID(ctx context.Context, balanceID uuid.UUID) (int64, error) {
+	return h.repo.GetCountHistoryByBalanceID(ctx, balanceID)
+}
+
 func (h *HistoryUseCase) GetHistoryByUserID(ctx context.Context, pagination models.Pagination, userID uuid.UUID) (models.HistoryTransfer, error) {
 	balanceID, err := h.balanceUC.GetBalanceIDByUserID(ctx, userID)
 	if err != nil {
@@ -47,9 +51,14 @@ func (h *HistoryUseCase) GetHistoryByUserID(ctx context.Context, pagination mode
 		}
 		serviceNameList = append(serviceNameList, serviceName)
 	}
+	count, err := h.GetCountHistoryByBalanceID(ctx, balanceID)
+	if err != nil {
+		return models.HistoryTransfer{}, err
+	}
 	return models.HistoryTransfer{
 		Histories:    historyList,
 		ServiceNames: serviceNameList,
+		Count:        count,
 	}, nil
 }
 
