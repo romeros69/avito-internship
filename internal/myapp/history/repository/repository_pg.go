@@ -36,17 +36,22 @@ func checkSourceReplenishment(source string) any {
 }
 
 func (h *HistoryRepo) GetHistoryByBalanceID(ctx context.Context, pagination models.Pagination, balanceID uuid.UUID) ([]models.History, error) {
-	query := `select * from history where balance_id = $1 order by $2 limit $3 offset $4`
+	query := ``
+	if pagination.OrderBy == "date" {
+		query = `select * from history where balance_id = $1 order by date limit $2 offset $3`
+	} else {
+		query = `select * from history where balance_id = $1 order by value limit $2 offset $3`
+	}
 
 	offset := pagination.GetOffset()
-	rows, err := h.pg.Pool.Query(ctx, query, balanceID, pagination.OrderBy, pagination.Size, offset)
+	rows, err := h.pg.Pool.Query(ctx, query, balanceID, pagination.Size, offset)
 	if err != nil {
 		return nil, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
 	var historyList []models.History
 
-	var test interface{}
+	var source interface{}
 	for rows.Next() {
 		var historyEntity models.History
 
@@ -57,14 +62,14 @@ func (h *HistoryRepo) GetHistoryByBalanceID(ctx context.Context, pagination mode
 			&historyEntity.OrderID,
 			&historyEntity.ServiceID,
 			&historyEntity.Value,
-			&test, // вот тут
+			&source, // вот тут
 			&historyEntity.Date,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("error in parsing history: %w", err)
 		}
-		if test != nil {
-			historyEntity.SourceReplenishment = test.(string)
+		if source != nil {
+			historyEntity.SourceReplenishment = source.(string)
 		} else {
 			historyEntity.SourceReplenishment = ""
 		}
