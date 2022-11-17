@@ -9,6 +9,7 @@ import (
 	historyHttp "avito-internship/internal/myapp/history/delivery/http/v1"
 	historyRepository "avito-internship/internal/myapp/history/repository"
 	historyUseCase "avito-internship/internal/myapp/history/usecase"
+	reportHttp "avito-internship/internal/myapp/report/delivery/http/v1"
 	reportRepository "avito-internship/internal/myapp/report/repository"
 	reportUseCase "avito-internship/internal/myapp/report/usecase"
 	reserveHttp "avito-internship/internal/myapp/reserve/delivery/http/v1"
@@ -64,17 +65,20 @@ func Run(cfg *configs.Config) {
 	reserveUC := reserveUseCase.NewReserveUseCase(reserveRepo, balanceUC, historyUC, reportUC, serviceUC)
 
 	// Init handlers
+	reportHandlers := reportHttp.NewReportHandlers(reportUC)
 	balanceHandlers := balanceHttp.NewBalanceHandlers(balanceUC)
 	reserveHandlers := reserveHttp.NewReserveHandlers(reserveUC)
 	historyHandlers := historyHttp.NewHistoryHandlers(historyUC)
 
 	handler.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	v1 := handler.Group("/api/v1")
-
+	v1.StaticFile("/report.csv", "report.csv")
 	balanceGroup := v1.Group("balance")
 	reserveGroup := v1.Group("reserve")
 	historyGroup := v1.Group("history")
+	reportGroup := v1.Group("report")
 
+	reportHttp.MapReportRoutes(reportGroup, reportHandlers)
 	reserveHttp.MapReserveRoutes(reserveGroup, reserveHandlers)
 	balanceHttp.MapBalanceRoutes(balanceGroup, balanceHandlers)
 	historyHttp.MapHistoryRoutes(historyGroup, historyHandlers)
