@@ -310,6 +310,50 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/reserve/cancel": {
+            "post": {
+                "description": "Cancellation of the service, refund from the reserve to the user's main account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "reserve"
+                ],
+                "summary": "CancelReserve",
+                "operationId": "cancel-reverse",
+                "parameters": [
+                    {
+                        "description": "Enter user id, value, service id, order id",
+                        "name": "input",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.reserveBalanceDTO"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.errResponse"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {

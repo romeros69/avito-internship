@@ -91,6 +91,18 @@ func (r *reserveHandlers) AcceptReserve(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
+// CancelReserve godoc
+// @Summary CancelReserve
+// @Tags reserve
+// @Description Cancellation of the service, refund from the reserve to the user's main account
+// @ID cancel-reverse
+// @Accept json
+// @Produce json
+// @Param input body reserveBalanceDTO true "Enter user id, value, service id, order id"
+// @Success 200 {object} nil
+// @Failure 400 {object} middleware.errResponse
+// @Failure 500 {object} middleware.errResponse
+// @Router /api/v1/reserve/cancel [post]
 func (r *reserveHandlers) CancelReserve(c *gin.Context) {
 	req := new(reserveBalanceDTO)
 	if err := c.ShouldBindJSON(req); err != nil {

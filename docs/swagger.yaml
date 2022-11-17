@@ -266,4 +266,34 @@ paths:
       summary: AcceptReserve
       tags:
       - reserve
+  /api/v1/reserve/cancel:
+    post:
+      consumes:
+      - application/json
+      description: Cancellation of the service, refund from the reserve to the user's
+        main account
+      operationId: cancel-reverse
+      parameters:
+      - description: Enter user id, value, service id, order id
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/v1.reserveBalanceDTO'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+      summary: CancelReserve
+      tags:
+      - reserve
 swagger: "2.0"
