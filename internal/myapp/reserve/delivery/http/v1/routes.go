@@ -8,4 +8,5 @@ import (
 func MapReserveRoutes(handler *gin.RouterGroup, h reserve.Handlers) {
 	handler.POST("", h.ReserveBalance)
 	handler.POST("/accept", h.AcceptReserve)
+	handler.POST("/cancel", h.CancelReserve)
 }

@@ -85,7 +85,16 @@ func (h *HistoryUseCase) CheckHistoryForReserve(ctx context.Context, reserveInfo
 	if err != nil {
 		return false, err
 	}
-	if countOpen > countClose {
+	countCancel, err := h.repo.GetCountHistoryForReserveByType(ctx, models.HistoryInfo{
+		BalanceID:   balanceID,
+		OrderID:     reserveInfo.OrderID,
+		ServiceID:   reserveInfo.ServiceID,
+		TypeHistory: "cancel_reserve",
+	})
+	if err != nil {
+		return false, err
+	}
+	if countOpen > (countClose + countCancel) {
 		return true, nil
 	}
 	return false, nil

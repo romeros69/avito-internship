@@ -14,4 +14,5 @@ type UseCase interface {
 	CreateEmptyBalance(context.Context, models.Balance) (uuid.UUID, error)
 	TransferBalance(context.Context, uuid.UUID, int64) error
 	CheckBeforeReserve(context.Context, uuid.UUID, int64) (bool, error)
+	ReturnMoneyFromReserve(context.Context, uuid.UUID, int64) error
 }

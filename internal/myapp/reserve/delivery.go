@@ -7,4 +7,5 @@ import (
 type Handlers interface {
 	ReserveBalance(c *gin.Context)
 	AcceptReserve(c *gin.Context)
+	CancelReserve(c *gin.Context)
 }

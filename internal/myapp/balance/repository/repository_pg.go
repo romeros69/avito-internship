@@ -123,3 +123,14 @@ func (b *BalanceRepo) TransferBalance(ctx context.Context, balanceID uuid.UUID, 
 	defer rows.Close()
 	return nil
 }
+
+func (b *BalanceRepo) ReturnMoneyFromReserve(ctx context.Context, balanceID uuid.UUID, value int64) error {
+	query := `update balance set value = value + $1 where id=$2`
+
+	rows, err := b.pg.Pool.Query(ctx, query, value, balanceID)
+	if err != nil {
+		return fmt.Errorf("cannot execute query: %w", err)
+	}
+	defer rows.Close()
+	return nil
+}

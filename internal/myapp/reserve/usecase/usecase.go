@@ -118,7 +118,7 @@ func (r *ReserveUseCase) AcceptReserve(ctx context.Context, reserveInfo models.R
 	case err != nil:
 		return err
 	case !canConfirm:
-		return fmt.Errorf("it is impossible to confirm the service due to the lack of a reserve")
+		return fmt.Errorf("there is no reserve for this order")
 	}
 
 	err = r.repo.SubtractionReserve(ctx, balanceID, reserveInfo.Value)
@@ -150,5 +150,53 @@ func (r *ReserveUseCase) AcceptReserve(ctx context.Context, reserveInfo models.R
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+func (r *ReserveUseCase) CancelReserve(ctx context.Context, reserveInfo models.ReserveInfo) error {
+	serviceExists, err := r.serviceUC.ServiceExistsByID(ctx, reserveInfo.ServiceID)
+	switch {
+	case err != nil:
+		return err
+	case !serviceExists:
+		return fmt.Errorf("service with this id (service_id = %s) does not exist", reserveInfo.ServiceID.String())
+	}
+
+	balanceID, err := r.balanceUC.GetBalanceIDByUserID(ctx, reserveInfo.UserID)
+	if err != nil {
+		return err
+	}
+
+	canConfirm, err := r.historyUC.CheckHistoryForReserve(ctx, reserveInfo, balanceID)
+	switch {
+	case err != nil:
+		return err
+	case !canConfirm:
+		return fmt.Errorf("there is no reserve for this order")
+	}
+
+	err = r.repo.SubtractionReserve(ctx, balanceID, reserveInfo.Value)
+	if err != nil {
+		return err
+	}
+
+	err = r.balanceUC.ReturnMoneyFromReserve(ctx, balanceID, reserveInfo.Value)
+	if err != nil {
+		return err
+	}
+
+	err = r.historyUC.CreateHistory(ctx, models.History{
+		ID:          uuid.New(),
+		BalanceID:   balanceID,
+		TypeHistory: "cancel_reserve",
+		OrderID:     reserveInfo.OrderID,
+		ServiceID:   reserveInfo.ServiceID,
+		Value:       reserveInfo.Value,
+		Date:        time.Now(),
+	})
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

@@ -13,4 +13,5 @@ type Repository interface {
 	BalanceExistsByUserID(context.Context, uuid.UUID) (bool, error)
 	CreateEmptyBalance(context.Context, models.Balance) (uuid.UUID, error)
 	TransferBalance(context.Context, uuid.UUID, int64) error
+	ReturnMoneyFromReserve(context.Context, uuid.UUID, int64) error
 }
