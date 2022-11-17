@@ -24,14 +24,14 @@ func NewReportUseCase(repo report.Repository) *ReportUseCase {
 var _ report.UseCase = (*ReportUseCase)(nil)
 
 func (r *ReportUseCase) createCSVFile(data [][]string) error {
-	_, err := os.Stat("report.csv")
+	_, err := os.Stat("./web/static/report.csv")
 	if err == nil {
-		err := os.Remove("report.csv")
+		err := os.Remove("./web/static/report.csv")
 		if err != nil {
 			return fmt.Errorf("error in deleting csv file: %w", err)
 		}
 	}
-	f, err := os.Create("report.csv")
+	f, err := os.Create("./web/static/report.csv")
 	defer f.Close()
 	if err != nil {
 		return fmt.Errorf("error in creating file: %w", err)

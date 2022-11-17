@@ -171,6 +171,58 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/report": {
+            "get": {
+                "description": "Getting report by year and month",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "report"
+                ],
+                "summary": "GetReportByYearMonth",
+                "operationId": "get-report",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Enter year (number)",
+                        "name": "year",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Enter month (number)",
+                        "name": "month",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.linkReportDTO"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.errResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/middleware.errResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/reserve": {
             "post": {
                 "description": "The method of reserving funds from the main balance in a separate account",
@@ -313,6 +365,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "v1.linkReportDTO": {
+            "type": "object",
+            "properties": {
+                "link": {
                     "type": "string"
                 }
             }

@@ -36,6 +36,11 @@ definitions:
       value:
         type: string
     type: object
+  v1.linkReportDTO:
+    properties:
+      link:
+        type: string
+    type: object
   v1.replenishmentRequestDTO:
     properties:
       source:
@@ -166,6 +171,41 @@ paths:
       summary: GetHistoryByUserID
       tags:
       - history
+  /api/v1/report:
+    get:
+      consumes:
+      - application/json
+      description: Getting report by year and month
+      operationId: get-report
+      parameters:
+      - description: Enter year (number)
+        in: query
+        name: year
+        required: true
+        type: string
+      - description: Enter month (number)
+        in: query
+        name: month
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.linkReportDTO'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/middleware.errResponse'
+      summary: GetReportByYearMonth
+      tags:
+      - report
   /api/v1/reserve:
     post:
       consumes:

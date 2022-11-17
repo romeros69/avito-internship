@@ -20,6 +20,19 @@ func NewReportHandlers(reportUC report.UseCase) report.Handlers {
 
 var _ report.Handlers = (*reportHandlers)(nil)
 
+// GetReport godoc
+// @Summary GetReportByYearMonth
+// @Tags report
+// @Description Getting report by year and month
+// @ID get-report
+// @Accept json
+// @Produce json
+// @Param year query string true "Enter year (number)"
+// @Param month query string true "Enter month (number)"
+// @Success 200 {object} linkReportDTO
+// @Failure 400 {object} middleware.errResponse
+// @Failure 500 {object} middleware.errResponse
+// @Router /api/v1/report [get]
 func (r *reportHandlers) GetReport(c *gin.Context) {
 	year, err := strconv.Atoi(c.Query("year"))
 	if err != nil {

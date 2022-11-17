@@ -71,8 +71,11 @@ func Run(cfg *configs.Config) {
 	historyHandlers := historyHttp.NewHistoryHandlers(historyUC)
 
 	handler.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	v1 := handler.Group("/api/v1")
-	v1.StaticFile("/report.csv", "report.csv")
+
+	v1.StaticFile("/report.csv", "./web/static/report.csv")
+
 	balanceGroup := v1.Group("balance")
 	reserveGroup := v1.Group("reserve")
 	historyGroup := v1.Group("history")
