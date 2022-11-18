@@ -6,6 +6,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
+	"log"
 )
 
 type ServiceRepo struct {
@@ -25,6 +26,7 @@ func (s *ServiceRepo) GetServiceNameByID(ctx context.Context, serviceID uuid.UUI
 
 	rows, err := s.pg.Pool.Query(ctx, query, serviceID)
 	if err != nil {
+		log.Println("cannot execute query: %w", err)
 		return "", fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
@@ -32,6 +34,7 @@ func (s *ServiceRepo) GetServiceNameByID(ctx context.Context, serviceID uuid.UUI
 	rows.Next()
 	err = rows.Scan(&nameService)
 	if err != nil {
+		log.Printf("error parsing tittle of service: %w", err)
 		return "", fmt.Errorf("error parsing tittle of service: %w", err)
 	}
 	return nameService, nil
@@ -42,6 +45,7 @@ func (s *ServiceRepo) ServiceExistsByID(ctx context.Context, serviceID uuid.UUID
 
 	rows, err := s.pg.Pool.Query(ctx, query, serviceID)
 	if err != nil {
+		log.Println("cannot execute query: %w", err)
 		return false, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()

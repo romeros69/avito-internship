@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
+	"log"
 )
 
 type HistoryRepo struct {
@@ -40,6 +41,7 @@ func (h *HistoryRepo) GetCountHistoryByBalanceID(ctx context.Context, balanceID 
 
 	rows, err := h.pg.Pool.Query(ctx, query, balanceID)
 	if err != nil {
+		log.Printf("cannot execute query: %w", err)
 		return -1, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
@@ -47,6 +49,7 @@ func (h *HistoryRepo) GetCountHistoryByBalanceID(ctx context.Context, balanceID 
 	if rows.Next() {
 		err = rows.Scan(&count)
 		if err != nil {
+			log.Printf("error parsing count of story by user: %w", err)
 			return -1, fmt.Errorf("error parsing count of story by user: %w", err)
 		}
 	}
@@ -64,6 +67,7 @@ func (h *HistoryRepo) GetHistoryByBalanceID(ctx context.Context, pagination mode
 	offset := pagination.GetOffset()
 	rows, err := h.pg.Pool.Query(ctx, query, balanceID, pagination.Size, offset)
 	if err != nil {
+		log.Printf("cannot execute query: %w", err)
 		return nil, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
@@ -84,6 +88,7 @@ func (h *HistoryRepo) GetHistoryByBalanceID(ctx context.Context, pagination mode
 			&historyEntity.Date,
 		)
 		if err != nil {
+			log.Printf("error in parsing history: %w", err)
 			return nil, fmt.Errorf("error in parsing history: %w", err)
 		}
 		if source != nil {
@@ -102,15 +107,18 @@ func (h *HistoryRepo) GetCountHistoryForReserveByType(ctx context.Context, histo
 
 	rows, err := h.pg.Pool.Query(ctx, query, historyInfo.BalanceID, historyInfo.OrderID, historyInfo.ServiceID, historyInfo.TypeHistory)
 	if err != nil {
+		log.Printf("cannot execute query: %w", err)
 		return 0, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
 	var count uint
 	if !rows.Next() {
+		log.Printf("this order no longer exists")
 		return 0, fmt.Errorf("this order no longer exists")
 	}
 	err = rows.Scan(&count)
 	if err != nil {
+		log.Printf("error in parsing count history for reserve by type history: %w", err)
 		return 0, fmt.Errorf("error in parsing count history for reserve by type history: %w", err)
 	}
 	return count, nil
@@ -130,10 +138,12 @@ func (h *HistoryRepo) CreateHistory(ctx context.Context, history models.History)
 		checkSourceReplenishment(history.SourceReplenishment),
 		history.Date)
 	if err != nil {
+		log.Printf("cannot execute query: %w", err)
 		return fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
 	if !rows.Next() {
+		log.Printf("error on creating history")
 		return fmt.Errorf("error on creating history")
 	}
 	return nil

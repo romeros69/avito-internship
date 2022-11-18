@@ -7,6 +7,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
+	"log"
 	"time"
 )
 
@@ -30,6 +31,7 @@ func (r *ReportRepo) GetReport(ctx context.Context, startPeriod time.Time) ([]mo
 
 	rows, err := r.pg.Pool.Query(ctx, query, startPeriod, end)
 	if err != nil {
+		log.Printf("cannot execute query: %w", err)
 		return nil, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
@@ -41,6 +43,7 @@ func (r *ReportRepo) GetReport(ctx context.Context, startPeriod time.Time) ([]mo
 			&reportResult.Proceeds,
 		)
 		if err != nil {
+			log.Printf("error parsing report result: %w ", err)
 			return nil, fmt.Errorf("error parsing report result: %w ", err)
 		}
 		reportList = append(reportList, reportResult)
@@ -60,15 +63,18 @@ func (r *ReportRepo) CreateReport(ctx context.Context, report models.Report) (uu
 		report.Date,
 	)
 	if err != nil {
+		log.Printf("cannot execute query: %w", err)
 		return uuid.Nil, fmt.Errorf("cannot execute query: %w", err)
 	}
 	defer rows.Close()
 	var reportID uuid.UUID
 	if !rows.Next() {
+		log.Printf("error in creating report")
 		return uuid.Nil, fmt.Errorf("error in creating report")
 	}
 	err = rows.Scan(&reportID)
 	if err != nil {
+		log.Printf("error in parsing id report of create report: %w", err)
 		return uuid.Nil, fmt.Errorf("error in parsing id report of create report: %w", err)
 	}
 	return reportID, nil
