@@ -17,7 +17,8 @@ create table service (
 create type history_type as enum (
     'replenishment',
     'reserve',
-    'confirmation'
+    'confirmation',
+    'cancel_reserve'
     );
 
 -- create table type_history (
