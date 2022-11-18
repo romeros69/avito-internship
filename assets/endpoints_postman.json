@@ -1,0 +1,214 @@
+{
+	"info": {
+		"_postman_id": "bf192867-d37f-49e3-8798-d06b87613bec",
+		"name": "endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19889095"
+	},
+	"item": [
+		{
+			"name": "GetBalanceByUserID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/v1/balance/{{user_id}}",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"balance",
+						"{{user_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ReplenishmentBalance",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userID\": \"8208c541-e2bc-4ff1-a384-6d39873cea14\",\n    \"value\":\"555434\",\n    \"source\":\"1111111111111111\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/balance",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"balance"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "BalanceReserve",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userID\":\"8208c541-e2bc-4ff1-a384-6d39873cea14\",\n    \"serviceID\":\"0ba5b953-9df7-4170-80bf-50d3d8e2222d\",\n    \"orderID\":\"8208c541-e2bc-4ff1-a384-6d39873cea69\",\n    \"value\":\"100000\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/reserve",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"reserve"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "AcceptReserve",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userID\":\"8208c541-e2bc-4ff1-a384-6d39873cea14\",\n    \"serviceID\":\"0ba5b953-9df7-4170-80bf-50d3d8e2222d\",\n    \"orderID\":\"8208c541-e2bc-4ff1-a384-6d39873cea69\",\n    \"value\":\"100000\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/reserve/accept",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"reserve",
+						"accept"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetHistoryByUserID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/v1/history/{{user_id}}?limit=10&page=1&orderBy=date",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"history",
+						"{{user_id}}"
+					],
+					"query": [
+						{
+							"key": "limit",
+							"value": "10"
+						},
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "orderBy",
+							"value": "date"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetReport",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:9000/api/v1/report?year=2022&month=11",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"report"
+					],
+					"query": [
+						{
+							"key": "year",
+							"value": "2022"
+						},
+						{
+							"key": "month",
+							"value": "11"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CancelReserve",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userID\":\"8208c541-e2bc-4ff1-a384-6d39873cea14\",\n    \"serviceID\":\"0ba5b953-9df7-4170-80bf-50d3d8e2222d\",\n    \"orderID\":\"8208c541-e2bc-4ff1-a384-6d39873cea69\",\n    \"value\":\"100000\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:9000/api/v1/reserve/cancel",
+					"host": [
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"api",
+						"v1",
+						"reserve",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
