@@ -6,6 +6,6 @@ import (
 )
 
 type Repository interface {
-	ServiceExistsByID(ctx context.Context, uuid uuid.UUID) (bool, error)
+	ServiceExistsByID(context.Context, uuid.UUID) (bool, error)
 	GetServiceNameByID(context.Context, uuid.UUID) (string, error)
 }
