@@ -6,7 +6,7 @@
     docker-compose up --build
 
 ### SWAGGER UI:
-https://localhost:5000/swagger/index.html
+http://localhost:9000/swagger/index.html#
 
 ### Postman collection:
 https://github.com/romeros69/avito-internship/blob/main/assets/endpoints_postman.json
@@ -45,4 +45,5 @@ https://github.com/romeros69/avito-internship/blob/main/assets/Diagram.png
 * При пополнении баланса в теле запроса добавлено поле source - номер карты, 
 иначе говоря источник пополнения. Это поле было добавлено, что бы можно было отслеживать
 историю тразакций баланса.
+* В методе запроса генерации отчета по выручке в ответе приходит ссылка на скачивание *scv* файла
     
