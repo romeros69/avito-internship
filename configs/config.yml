@@ -1,5 +1,5 @@
 postgres:
-  url: postgresql://postgres:postgres@localhost:5432/balance
+  url: postgresql://postgres:postgres@psql:5432/balance
 
 http:
   port: 9000
